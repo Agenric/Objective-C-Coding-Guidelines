@@ -90,25 +90,24 @@ remove:
 **推荐：**
 ```objc
 ID, URL, JSON, WWW
+
+destinationSelection
+
+setBackgroundColor:
+
 ```
 
 **反对：**
 ```objc
 id, Url, json, www
-```
 
-**推荐：**
-```objc
-destinationSelection
-setBackgroundColor:
-```
-
-**反对：**
-```objc
 //不要使用简写
 destSel
+
 setBkgdColor:
+
 ```
+
 ####一致性
 整个工程的命名风格要保持一致性，最好和苹果SDK的代码保持统一。不同类中完成相似功能的方法应该叫一样的名字，比如我们总是用count来返回集合的个数，不能在A类中使用count而在B类中使用getNumber。
 
@@ -193,16 +192,16 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 
 不要用`and`来连接两个参数，通常`and`用来表示方法执行了两个相对独立的操作（*从设计上来说，这时候应该拆分成两个独立的方法*）：
 
-**反对：**
-```objective-c
-//不要使用"and"来连接参数
-- (int)runModalForDirectory:(NSString *)path andFile:(NSString *)name andTypes:(NSArray *)fileTypes;
-```
-
 **推荐：**
 ```objc
 //使用"and"来表示两个相对独立的操作
 - (BOOL)openFile:(NSString *)fullPath withApplication:(NSString *)appName andDeactivate:(BOOL)flag;
+```
+
+**反对：**
+```objective-c
+//不要使用"and"来连接参数
+- (int)runModalForDirectory:(NSString *)path andFile:(NSString *)name andTypes:(NSArray *)fileTypes;
 ```
 
 方法的参数命名也有一些需要注意的地方:
@@ -260,6 +259,7 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 ```
 
 命名存取方法时不要将动词转化为被动形式来使用：
+
 **推荐：**
 ```objective-c
 - (void)setAcceptsGlyphInfo:(BOOL)flag;
@@ -585,28 +585,28 @@ Xcode8注释快捷键
 
 类方法声明在方法类型与返回类型之间要有空格。
 
-**反对：**
-```objc
--(void)methodName:(NSString *)string;
-```
-
 **推荐：**
 ```objc
 - (void)methodName:(NSString *)string;
 ```
 
-条件判断的括号内侧不应有空格。
-
 **反对：**
 ```objc
-if ( a < b ) {
-    // something
-}
+-(void)methodName:(NSString *)string;
 ```
+
+条件判断的括号内侧不应有空格。
 
 **推荐：**
 ```objc
 if (a < b) {
+    // something
+}
+```
+
+**反对：**
+```objc
+if ( a < b ) {
     // something
 }
 ```
@@ -834,9 +834,7 @@ NSDictionary *option1 = @{
   NSFontAttributeName : [NSFont fontWithName:@"Helvetica-Bold" size:12],
   NSForegroundColorAttributeName : fontColor
 };
-```
-**推荐：**
-```objc
+
 //按照Value来对齐
 NSDictionary *option2 = @{
   NSFontAttributeName :            [NSFont fontWithName:@"Arial" size:12],
@@ -870,7 +868,27 @@ NSDictionary *stillWrong = @{
 - 禁止出现超过两层循环的代码，用函数或block替代。
 
 
-#**反对**
+**推荐：**
+```objc
+- (Task *)creatTaskWithPath:(NSString *)path {
+    if (![path isURL]) {
+        return nil;
+    }
+
+    if (![fileManager isWritableFileAtPath:path]) {
+        return nil;
+    }
+
+    if ([taskManager hasTaskWithPath:path]) {
+        return nil;
+    }
+
+    Task *aTask = [[Task alloc] initWithPath:path];
+    return aTask;
+}
+```
+
+**反对:**
 ```objc
 // 为了简化示例，没有错误处理，并使用了伪代码
 - (Task *)creatTaskWithPath:(NSString *)path {
@@ -895,25 +913,6 @@ NSDictionary *stillWrong = @{
 }
 ```
 
-**推荐：**
-```objc
-- (Task *)creatTaskWithPath:(NSString *)path {
-    if (![path isURL]) {
-        return nil;
-    }
-
-    if (![fileManager isWritableFileAtPath:path]) {
-        return nil;
-    }
-
-    if ([taskManager hasTaskWithPath:path]) {
-        return nil;
-    }
-
-    Task *aTask = [[Task alloc] initWithPath:path];
-    return aTask;
-}
-```
 
 
 ##编码风格
@@ -958,6 +957,13 @@ NSDictionary *stillWrong = @{
 
 BOOL在Objective-C中被定义为`signed char`类型，这意味着一个BOOL类型的变量不仅仅可以表示`YES`(1)和`NO`(0)两个值，所以永远**不要**将BOOL类型变量直接和`YES`比较：
 
+**推荐：**
+```objc
+BOOL great = [foo isGreat];
+if (great)
+  // ...be great!
+```
+
 **反对：**
 ```objective-c
 //无法确定|great|的值是否是YES(1)，不要将BOOL值直接与YES比较
@@ -966,25 +972,8 @@ if (great == YES)
   // ...be great!
 ```
 
-**推荐：**
-```objc
-BOOL great = [foo isGreat];
-if (great)
-  // ...be great!
-```
 
 同样的，也不要将其它类型的值作为BOOL来返回，这种情况下，BOOL变量只会取值的最后一个字节来赋值，这样很可能会取到0（NO）。但是，一些逻辑操作符比如`&&`,`||`,`!`的返回是可以直接赋给BOOL的：
-
-**反对：**
-```objective-c
-//不要将其它类型转化为BOOL返回
-- (BOOL)isBold {
-  return [self fontTraits] & NSFontBoldTrait;
-}
-- (BOOL)isValid {
-  return [self stringValue];
-}
-```
 
 **推荐：**
 ```objc
@@ -1001,6 +990,18 @@ if (great)
   return [self isValid] && [self isBold];
 }
 ```
+
+**反对：**
+```objective-c
+//不要将其它类型转化为BOOL返回
+- (BOOL)isBold {
+  return [self fontTraits] & NSFontBoldTrait;
+}
+- (BOOL)isValid {
+  return [self stringValue];
+}
+```
+
 
 另外BOOL类型可以和`_Bool`,`bool`相互转化，但是**不能**和`Boolean`转化。
 
@@ -1025,6 +1026,7 @@ if (great)
   [super dealloc];
 }
 ```
+
 **反对：**
 ```objc
 //不要通过存取方法访问
@@ -1117,6 +1119,7 @@ if (nil == objc) {
 ###点语法的使用
 
 不要用点分语法来调用方法，只用来访问属性。这样是为了防止代码可读性问题。
+
 **推荐：**
 ```objective-c
 //使用点分语法访问属性
