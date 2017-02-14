@@ -66,34 +66,46 @@
 - 局部变量大小写首选小驼峰，也可使用小写下划线的形式（snake_case）
 - C函数的命名用大驼峰
 
-```
-//清晰
+
+**推荐：**
+```objc
 insertObject:atIndex:
 
-//不清晰，insert的对象类型和at的位置属性没有说明
-insert:at:
-
-//清晰
 removeObjectAtIndex:
 
-//不清晰，remove的对象类型没有说明，参数的作用没有说明
+```
+
+**反对：**
+```objc
+//insert的对象类型和at的位置属性没有说明
+insert:at:
+
+//remove的对象类型没有说明，参数的作用没有说明
 remove:
+
 ```
 不要使用单词的简写，拼写出完整的单词：
 
 
-```
-// OK
+**推荐：**
+```objc
 ID, URL, JSON, WWW
+```
 
-// 糟糕
+**反对：**
+```objc
 id, Url, json, www
+```
 
-//清晰
+**推荐：**
+```objc
 destinationSelection
 setBackgroundColor:
+```
 
-//不清晰，不要使用简写
+**反对：**
+```objc
+//不要使用简写
 destSel
 setBkgdColor:
 ```
@@ -133,7 +145,7 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 
 如果方法表示让对象执行一个动作，使用动词打头来命名，注意不要使用`do`，`does`这种多余的关键字，动词本身的暗示就足够了：
 
-```objective-c
+```objc
 //动词打头的方法表示让对象执行一个动作
 - (void)invokeWithTarget:(id)target;
 - (void)selectTabViewItem:(NSTabViewItem *)tabViewItem;
@@ -141,40 +153,58 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 
 如果方法是为了获取对象的一个属性值，直接用属性名称来命名这个方法，注意不要添加`get`或者其他的动词前缀：
 
+**推荐：**
 ```objective-c
-//正确，使用属性名来命名方法
+//使用属性名来命名方法
 - (NSSize)cellSize;
+```
 
-//错误，添加了多余的动词前缀
+**反对：**
+```objective-c
+//添加了多余的动词前缀
 - (NSSize)calcCellSize;
 - (NSSize)getCellSize;
 ```
 
 对于有多个参数的方法，务必在每一个参数前都添加关键词，关键词应当清晰说明参数的作用：
 
+**推荐：**
 ```objective-c
-//正确，保证每个参数都有关键词修饰
+//保证每个参数都有关键词修饰
 - (void)sendAction:(SEL)aSelector toObject:(id)anObject forAllCells:(BOOL)flag;
+```
 
+**反对：**
+```objc
 //错误，遗漏关键词
 - (void)sendAction:(SEL)aSelector :(id)anObject :(BOOL)flag;
+```
 
-//正确
+**推荐：**
+```objc
 - (id)viewWithTag:(NSInteger)aTag;
+```
 
-//错误，关键词的作用不清晰
+**反对：**
+```objc
+//关键词的作用不清晰
 - (id)taggedView:(int)aTag;
 ```
 
 不要用`and`来连接两个参数，通常`and`用来表示方法执行了两个相对独立的操作（*从设计上来说，这时候应该拆分成两个独立的方法*）：
 
+**反对：**
 ```objective-c
-//错误，不要使用"and"来连接参数
+//不要使用"and"来连接参数
 - (int)runModalForDirectory:(NSString *)path andFile:(NSString *)name andTypes:(NSArray *)fileTypes;
+```
 
-//正确，使用"and"来表示两个相对独立的操作
+**推荐：**
+```objc
+//使用"and"来表示两个相对独立的操作
 - (BOOL)openFile:(NSString *)fullPath withApplication:(NSString *)appName andDeactivate:(BOOL)flag;
 ```
+
 方法的参数命名也有一些需要注意的地方:
 - 和方法名类似，参数的第一个字母小写，后面的每一个单词首字母大写
 - 不要再方法名中使用类似`pointer`,`ptr`这样的字眼去表示指针，参数本身的类型足以说明
@@ -210,50 +240,58 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 //属性是一个名词时的存取方法范式
 - (type)noun;
 - (void)setNoun:(type)aNoun;
-//栗子
+//例子
 - (NSString *)title;
 - (void)setTitle:(NSString *)aTitle;
 
 //属性是一个形容词时存取方法的范式
 - (BOOL)isAdjective;
 - (void)setAdjective:(BOOL)flag;
-//栗子
+//例子
 - (BOOL)isEditable;
 - (void)setEditable:(BOOL)flag;
 
 //属性是一个动词时存取方法的范式
 - (BOOL)verbObject;
 - (void)setVerbObject:(BOOL)flag;
-//栗子
+//例子
 - (BOOL)showsAlpha;
 - (void)setShowsAlpha:(BOOL)flag;
 ```
 
 命名存取方法时不要将动词转化为被动形式来使用：
+**推荐：**
 ```objective-c
-//正确
 - (void)setAcceptsGlyphInfo:(BOOL)flag;
 - (BOOL)acceptsGlyphInfo;
+```
 
-//错误，不要使用动词的被动形式
+**反对：**
+```objc
+//不要使用动词的被动形式
 - (void)setGlyphInfoAccepted:(BOOL)flag;
 - (BOOL)glyphInfoAccepted;
 ```
 
 可以使用`can`,`should`,`will`等词来协助表达存取方法的意思，但不要使用`do`,和`does`：
+
+**推荐：**
 ```objective-c
-//正确
 - (void)setCanHide:(BOOL)flag;
 - (BOOL)canHide;
 - (void)setShouldCloseDocument:(BOOL)flag;
 - (BOOL)shouldCloseDocument;
+```
 
-//错误，不要使用"do"或者"does"
+**反对：**
+```objc
+//不要使用"do"或者"does"
 - (void)setDoesAcceptGlyphInfo:(BOOL)flag;
 - (BOOL)doesAcceptGlyphInfo;
 ```
 
 为什么Objective-C中不适用`get`前缀来表示属性获取方法？因为`get`在Objective-C中通常只用来表示从函数指针返回值的函数：
+
 ```objective-c
 //三个参数都是作为函数的返回值来使用的，这样的函数名可以使用"get"前缀
 - (void)getLineDash:(float *)pattern count:(int *)count phase:(float *)phase;
@@ -292,7 +330,7 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 - (void)removeElement:(elementType)anObj;
 - (NSArray *)elements;
 
-//栗子
+//例子
 - (void)addLayoutManager:(NSLayoutManager *)obj;
 - (void)removeLayoutManager:(NSLayoutManager *)obj;
 - (NSArray *)layoutManagers;
@@ -393,7 +431,7 @@ const float NSLightGray;
 	
 	[触发通知的类名] + [Did | Will] + [动作] + Notification
 
-栗子：
+例子：
 
 ```objective-c
 NSApplicationDidBecomeActiveNotification
@@ -547,24 +585,27 @@ Xcode8注释快捷键
 
 类方法声明在方法类型与返回类型之间要有空格。
 
-```
-// 糟糕
+**反对：**
+```objc
 -(void)methodName:(NSString *)string;
+```
 
-// OK
+**推荐：**
+```objc
 - (void)methodName:(NSString *)string;
 ```
 
 条件判断的括号内侧不应有空格。
 
-
-```
-// 糟糕
+**反对：**
+```objc
 if ( a < b ) {
     // something
 }
+```
 
-// OK
+**推荐：**
+```objc
 if (a < b) {
     // something
 }
@@ -572,14 +613,13 @@ if (a < b) {
 
 关系运算符（如 >=、!=）和逻辑运算符（如 &&、||）两边要有空格。
 
-
-```
-// OK
+**推荐：**
+```objc
 (someValue > 100)? YES : NO
 
-// OK
 (items)?: @[]
 ```
+
 
 二元算数运算符两侧是否加空格不确定，根据情况自己定。一元运算符与操作数之前没有空格。
 
@@ -626,6 +666,7 @@ if (a < b) {
 
 函数调用的格式和书写差不多，可以按照函数的长短来选择写在一行或者分成多行：
 
+**推荐：**
 ```objective-c
 //写在一行
 [myObject doFooWith:arg1 name:arg2 error:arg3];
@@ -642,8 +683,7 @@ if (a < b) {
                 error:arg4];
 ```
 
-以下写法是错误的：
-
+**反对：**
 ```objective-c
 //错误，要么写在一行，要么全部分行
 [myObject doFooWith:arg1 name:arg2
@@ -755,12 +795,16 @@ void (^largeBlock)(void) = ^{
 
 如果构造代码写在一行，需要在括号两端留有一个空格，使得被构造的元素于与构造语法区分开来：
 
+**推荐：**
 ```objective-c
-//正确，在语法糖的"[]"或者"{}"两端留有空格
+//在语法糖的"[]"或者"{}"两端留有空格
 NSArray *array = @[ [foo description], @"Another String", [bar description] ];
 NSDictionary *dict = @{ NSForegroundColorAttributeName : [NSColor redColor] };
+```
 
-//不正确，不留有空格降低了可读性
+**反对：**
+```objc
+//不留有空格降低了可读性
 NSArray* array = @[[foo description], [bar description]];
 NSDictionary* dict = @{NSForegroundColorAttributeName: [NSColor redColor]};
 ```
@@ -783,30 +827,36 @@ NSDictionary *dictionary = @{
 
 构造字典时，字典的Key和Value与中间的冒号`:`都要留有一个空格，多行书写时，也可以将Value对齐：
 
+**推荐：**
 ```objective-c
-//正确，冒号':'前后留有一个空格
+//冒号':'前后留有一个空格
 NSDictionary *option1 = @{
   NSFontAttributeName : [NSFont fontWithName:@"Helvetica-Bold" size:12],
   NSForegroundColorAttributeName : fontColor
 };
-
-//正确，按照Value来对齐
+```
+**推荐：**
+```objc
+//按照Value来对齐
 NSDictionary *option2 = @{
   NSFontAttributeName :            [NSFont fontWithName:@"Arial" size:12],
   NSForegroundColorAttributeName : fontColor
 };
+```
 
-//错误，冒号前应该有一个空格
+**反对：**
+```objc
+//冒号前应该有一个空格
 NSDictionary *wrong = @{
   AKey:       @"b",
   BLongerKey: @"c",
 };
 
-//错误，每一个元素要么单独成为一行，要么全部写在一行内
+//每一个元素要么单独成为一行，要么全部写在一行内
 NSDictionary *alsoWrong= @{ AKey : @"a",
                             BLongerKey : @"b" };
 
-//错误，在冒号前只能有一个空格，冒号后才可以考虑按照Value对齐
+//在冒号前只能有一个空格，冒号后才可以考虑按照Value对齐
 NSDictionary *stillWrong = @{
   AKey       : @"b",
   BLongerKey : @"c",
@@ -820,10 +870,9 @@ NSDictionary *stillWrong = @{
 - 禁止出现超过两层循环的代码，用函数或block替代。
 
 
-```
+#**反对**
+```objc
 // 为了简化示例，没有错误处理，并使用了伪代码
-
-// 糟糕的例子
 - (Task *)creatTaskWithPath:(NSString *)path {
     Task *aTask;
     if ([path isURL]) {
@@ -844,8 +893,10 @@ NSDictionary *stillWrong = @{
     }
     return aTask;
 }
+```
 
-// 改写的例子
+**推荐：**
+```objc
 - (Task *)creatTaskWithPath:(NSString *)path {
     if (![path isURL]) {
         return nil;
@@ -890,11 +941,15 @@ NSDictionary *stillWrong = @{
 
 上面提到过，每一个框架都会有一个和框架同名的头文件，它包含了框架内接口的所有引用，在使用框架的时候，应该直接引用这个根头文件，而不是其它子模块的头文件，即使是你只用到了其中的一小部分，编译器会自动完成优化的。
 
+**推荐：**
 ```objective-c
-//正确，引用根头文件
+//引用根头文件
 #import <Foundation/Foundation.h>
+```
 
-//错误，不要单独引用框架内的其它头文件
+**反对：**
+```objc
+//不要单独引用框架内的其它头文件
 #import <Foundation/NSArray.h>
 #import <Foundation/NSString.h>
 ```
@@ -903,13 +958,16 @@ NSDictionary *stillWrong = @{
 
 BOOL在Objective-C中被定义为`signed char`类型，这意味着一个BOOL类型的变量不仅仅可以表示`YES`(1)和`NO`(0)两个值，所以永远**不要**将BOOL类型变量直接和`YES`比较：
 
+**反对：**
 ```objective-c
-//错误，无法确定|great|的值是否是YES(1)，不要将BOOL值直接与YES比较
+//无法确定|great|的值是否是YES(1)，不要将BOOL值直接与YES比较
 BOOL great = [foo isGreat];
 if (great == YES)
   // ...be great!
+```
 
-//正确
+**推荐：**
+```objc
 BOOL great = [foo isGreat];
 if (great)
   // ...be great!
@@ -917,24 +975,28 @@ if (great)
 
 同样的，也不要将其它类型的值作为BOOL来返回，这种情况下，BOOL变量只会取值的最后一个字节来赋值，这样很可能会取到0（NO）。但是，一些逻辑操作符比如`&&`,`||`,`!`的返回是可以直接赋给BOOL的：
 
+**反对：**
 ```objective-c
-//错误，不要将其它类型转化为BOOL返回
+//不要将其它类型转化为BOOL返回
 - (BOOL)isBold {
   return [self fontTraits] & NSFontBoldTrait;
 }
 - (BOOL)isValid {
   return [self stringValue];
 }
+```
 
-//正确
+**推荐：**
+```objc
 - (BOOL)isBold {
   return ([self fontTraits] & NSFontBoldTrait) ? YES : NO;
 }
 
-//正确，逻辑操作符可以直接转化为BOOL
+//逻辑操作符可以直接转化为BOOL
 - (BOOL)isValid {
   return [self stringValue] != nil;
 }
+
 - (BOOL)isEnabled {
   return [self isValid] && [self isBold];
 }
@@ -948,8 +1010,9 @@ if (great)
 
 当`init``dealloc`方法被执行时，类的运行时环境不是处于正常状态的，使用存取方法访问变量可能会导致不可预料的结果，因此应当在这两个方法内直接访问实例变量。
 
+**推荐：**
 ```objective-c
-//正确，直接访问实例变量
+//直接访问实例变量
 - (instancetype)init {
   self = [super init];
   if (self) {
@@ -961,8 +1024,10 @@ if (great)
   [_bar release];
   [super dealloc];
 }
-
-//错误，不要通过存取方法访问
+```
+**反对：**
+```objc
+//不要通过存取方法访问
 - (instancetype)init {
   self = [super init];
   if (self) {
@@ -1033,13 +1098,17 @@ initWithTitle: date: location: 就是 designated 初始化方法，另外的两�
 
 另外，不要使用诸如`nil == Object`或者`Object == nil`的形式来判断。
 
+**推荐：**
 ```objective-c
-//正确，直接判断
+//直接判断
 if (!objc) {
 	...	
 }
+```
 
-//错误，不要使用nil == Object的形式
+**反对：**
+```objc
+//不要使用nil == Object的形式
 if (nil == objc) {
 	...	
 }
@@ -1048,13 +1117,15 @@ if (nil == objc) {
 ###点语法的使用
 
 不要用点分语法来调用方法，只用来访问属性。这样是为了防止代码可读性问题。
-
+**推荐：**
 ```objective-c
-//正确，使用点分语法访问属性
+//使用点分语法访问属性
 NSString *oldName = myObject.name;
 myObject.name = @"Alice";
-
-//错误，不要用点分语法调用方法
+```
+**反对：**
+```objc
+//不要用点分语法调用方法
 NSArray *array = [NSArray arrayWithObject:@"hello"];
 NSUInteger numberOfItems = array.count;
 array.release;
@@ -1114,13 +1185,15 @@ KVO触发机制:一个对象(观察者),检测另一个对象(被观察者)的�
 
 ** 例子 **
 
-
+**推荐：**
 ```
 @interface NSDate (ZOCTimeExtensions)
 - (NSString *)zoc_timeAgoShort;
 @end
-** 不要这样 **
+```
 
+**反对：**
+```objc
 @interface NSDate (ZOCTimeExtensions)
 - (NSString *)timeAgoShort;
 @end
