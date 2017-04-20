@@ -37,12 +37,12 @@
   * [代码组织](#代码组织)
 * [编码风格](#代码格式)
   * [不要使用new方法](#不要使用new方法)
-  * [Public API要尽量简洁](#Public API要尽量简洁)
+  * [Public API要尽量简洁](#Public_API要尽量简洁)
   * [#import和#include](##import和#include)
   * [引用框架的根头文件](#引用框架的根头文件)
   * [BOOL的使用](#BOOL的使用)
   * [init和dealloc](init和dealloc)
-  * [Designated 和 Secondary 初始化方法](#Designated 和 Secondary 初始化方法)
+  * [Designated和Secondary初始化方法](#Designated和Secondary初始化方法)
   * [按照顺序释放资源](#按照顺序释放资源)
   * [nil检查](#nil检查)
   * [点语法的使用](#点语法的使用)
@@ -109,9 +109,11 @@ setBkgdColor:
 ```
 
 ## 一致性
+
 整个工程的命名风格要保持一致性，最好和苹果SDK的代码保持统一。不同类中完成相似功能的方法应该叫一样的名字，比如我们总是用count来返回集合的个数，不能在A类中使用count而在B类中使用getNumber。
 
-## 使用前缀
+使用前缀
+
 如果代码需要打包成Framework给别的工程使用，或者工程项目非常庞大，需要拆分成不同的模块，使用命名前缀是非常有用的。
 
 - 前缀由大写的字母缩写组成，比如Cocoa中NS前缀代表Founation框架中的类，IB则代表Interface Builder框架。
@@ -923,7 +925,7 @@ NSDictionary *stillWrong = @{
 
 尽管很多时候能用`new`代替`alloc init`方法，但这可能会导致调试内存时出现不可预料的问题。Cocoa的规范就是使用`alloc init`方法，使用`new`会让一些读者困惑。
 
-## Public API要尽量简洁
+## Public_API要尽量简洁
 
 共有接口要设计的简洁，满足核心的功能需求就可以了。不要设计很少会被用到，但是参数极其复杂的API。如果要定义复杂的方法，使用类别或者类扩展。
 
@@ -948,12 +950,14 @@ NSDictionary *stillWrong = @{
 
 **反对：**
 ```objc
+
 //不要单独引用框架内的其它头文件
 #import <Foundation/NSArray.h>
 #import <Foundation/NSString.h>
+
 ```
 
-###BOOL的使用
+## BOOL的使用
 
 BOOL在Objective-C中被定义为`signed char`类型，这意味着一个BOOL类型的变量不仅仅可以表示`YES`(1)和`NO`(0)两个值，所以永远**不要**将BOOL类型变量直接和`YES`比较：
 
@@ -976,6 +980,7 @@ if (great == YES)
 同样的，也不要将其它类型的值作为BOOL来返回，这种情况下，BOOL变量只会取值的最后一个字节来赋值，这样很可能会取到0（NO）。但是，一些逻辑操作符比如`&&`,`||`,`!`的返回是可以直接赋给BOOL的：
 
 **推荐：**
+
 ```objc
 - (BOOL)isBold {
   return ([self fontTraits] & NSFontBoldTrait) ? YES : NO;
@@ -1005,7 +1010,7 @@ if (great == YES)
 
 另外BOOL类型可以和`_Bool`,`bool`相互转化，但是**不能**和`Boolean`转化。
 
-###init和dealloc
+## init和dealloc
 
 推荐的代码组织方式是将 dealloc 方法放在实现文件的最前面（直接在 @synthesize 以及 @dynamic 之后），init 应该跟在 dealloc 方法后面。
 
@@ -1028,6 +1033,7 @@ if (great == YES)
 ```
 
 **反对：**
+
 ```objc
 //不要通过存取方法访问
 - (instancetype)init {
@@ -1041,9 +1047,11 @@ if (great == YES)
   self.bar = nil;
   [super dealloc];
 }
+
 ```
 
-###Designated 和 Secondary 初始化方法
+
+## Designated和Secondary初始化方法
 
 Objective-C 有指定初始化方法(designated initializer)和间接(secondary initializer)初始化方法的观念。 designated 初始化方法是提供所有的参数，secondary 初始化方法是一个或多个，并且提供一个或者更多的默认参数来调用 designated 初始化的初始化方法。
 
@@ -1080,11 +1088,11 @@ Objective-C 有指定初始化方法(designated initializer)和间接(secondary 
 
 initWithTitle: date: location: 就是 designated 初始化方法，另外的两个是 secondary 初始化方法。因为它们仅仅是调用类实现的 designated 初始化方法
 
-###按照顺序释放资源
+## 按照顺序释放资源
 
 在类或者Controller的生命周期结束时，往往需要做一些扫尾工作，比如释放资源，停止线程等，这些扫尾工作的释放顺序应当与它们的初始化或者定义的顺序保持一致。这样做是为了方便调试时寻找错误，也能防止遗漏。
 
-###保证NSObject在赋值时被复制
+## 保证NSObject在赋值时被复制
 
 在传递或者赋值时应当保证是以复制（copy）的方式进行的，这样可以防止在不知情的情况下String的值被其它对象修改。
 
@@ -1094,7 +1102,7 @@ initWithTitle: date: location: 就是 designated 初始化方法，另外的两�
 }
 ```
 
-###nil检查
+## nil检查
 
 因为在Objective-C中向nil对象发送命令是不会抛出异常或者导致崩溃的，只是完全的“什么都不干”，所以，只在程序中使用nil来做逻辑上的检查。
 
@@ -1116,7 +1124,7 @@ if (nil == objc) {
 }
 ```
 
-###点语法的使用
+## 点语法的使用
 
 不要用点分语法来调用方法，只用来访问属性。这样是为了防止代码可读性问题。
 
@@ -1134,7 +1142,7 @@ NSUInteger numberOfItems = array.count;
 array.release;
 ```
 
-###Delegate要使用弱引用
+## Delegate要使用弱引用
 
 一个类的Delegate对象通常还引用着类本身，这样很容易造成引用循环的问题，所以类的Delegate属性要设置为弱引用。
 
@@ -1143,7 +1151,7 @@ array.release;
 @property (nonatomic, weak) id <IPCConnectHandlerDelegate> delegate;
 ```
 
-###单例
+## 单例
 
 如果可能，请尽量避免使用单例而是依赖注入。 然而，如果一定要用，请使用一个线程安全的模式来创建共享的实例。对于 GCD，用 dispatch_once() 函数就可以咯。
 
@@ -1159,7 +1167,8 @@ array.release;
    return sharedInstance;
 }
 ```
-###KVO
+## KVO
+
 KVO触发机制:一个对象(观察者),检测另一个对象(被观察者)的某属性是否发生变化,若被监测的属性发生了更改,会触发观察者的一个方法(方法名固定,类似代理方法)
 
 - 注册观察者(为被观察这指定观察者以及被观察者属性)
@@ -1174,12 +1183,13 @@ KVO触发机制:一个对象(观察者),检测另一个对象(被观察者)的�
 - 注册的监听没有移除掉,又重新注册了一遍监听
 
 
-###断言
+## 断言
 
 你的方法可能要求一些参数来满足特定的条件（比如不能为nil），在这种情况下最好使用 NSParameterAssert() 来断言条件是否成立或是抛出一个异常。
 
 
-###Categories
+## Categories
+
 虽然我们知道这样写很丑, 但是我们应该要在我们的 category 方法前加上自己的小写前缀以及下划线，比如- (id)zoc_myCategoryMethod。 这种实践同样被苹果推荐。
 
 这是非常必要的。因为如果在扩展的 category 或者其他 category 里面已经使用了同样的方法名，会导致不可预计的后果。实际上，实际被调用的是最后被加载的那个 category 中方法的实现。
@@ -1227,8 +1237,7 @@ KVO触发机制:一个对象(观察者),检测另一个对象(被观察者)的�
 @end
 ```
 
-###Pragma Mark
-
+## Pragma Mark
 
 `#pragma mark`是一个在类内部组织代码并且帮助你分组方法实现的好办法。 我们建议使用 `#pragma mark` - 来分离:
 
@@ -1244,8 +1253,8 @@ protocols 的实现
 - (void)viewWillAppear:(BOOL)animated { /* ... */ }
 - (void)didReceiveMemoryWarning { /* ... */ }
 
-##设计模式
-###ReactiveCocoa+MVVM
+## 设计模式
+## ReactiveCocoa+MVVM
 推荐使用ReactiveCocoa+MVVM设计代码架构，只有代码架构上清晰合理了上述规则才能锦上添花。
 
 具体使用方法参考下列文章。
